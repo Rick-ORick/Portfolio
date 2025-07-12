@@ -1,4 +1,5 @@
-// This runs on Vercel serverless backend
+// api/generate.js (Vercel Serverless Function)
+
 const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
@@ -13,14 +14,18 @@ module.exports = async (req, res) => {
 
   const { todoText } = req.body;
 
+  if (!todoText || typeof todoText !== "string") {
+    return res.status(400).json({ error: "Invalid or missing todoText" });
+  }
+
   try {
-    // Description generation
+    // Generate sarcastic description via GPT-4
     const completion = await openai.createChatCompletion({
       model: "gpt-4",
       messages: [
         {
           role: "user",
-          content: `Write a casual two sentences (no more than 10 words long) description of the item but do it like you actually hate me and doubt I will do anything in the list: "${todoText}"`,
+          content: `Write a casual two-sentence (10 words max) description of this item but do it like you hate me and doubt I will ever do it: \"${todoText}\"`,
         },
       ],
       max_tokens: 60,
@@ -28,7 +33,7 @@ module.exports = async (req, res) => {
 
     const description = completion.data.choices[0].message.content.trim();
 
-    // Image generation
+    // Generate image from DALL-E
     const imageRes = await openai.createImage({
       prompt: todoText,
       n: 1,
