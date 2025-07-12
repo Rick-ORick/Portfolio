@@ -6,9 +6,8 @@ let todoInput = document.getElementById('todoInput');
 
 let todo_list = localStorage.getItem('todo-list')
   ? JSON.parse(localStorage.getItem('todo-list')).todo_list
-  : []; //I use a ternary conditional statement to create a special statement that will read the current todos from the local storage if they exist. And otherwise, (? if false) it will return an empty array
+  : []; // load from localStorage or start empty
 
-// This function creates a new DOM element for each todo item. The older version would repaint the whole list after each item was added or deleted. The objective here is to make it so those functions append themselves instead of repeating 
 function createTodoElement(todo, index) {
   const todoDiv = document.createElement('div');
   todoDiv.className = 'todoItem';
@@ -22,14 +21,14 @@ function createTodoElement(todo, index) {
   descP.style.color = '#555';
   descP.textContent = todo.description || 'Loading description...';
 
-  const img = document.createElement('img'); //This is the A.I generated image
+  const img = document.createElement('img');
   img.className = 'todoImage';
   if (todo.image_url) {
     img.src = todo.image_url;
     img.alt = `Image for ${todo.text}`;
   }
 
-  const actions = document.createElement('div'); //this is the A.I generated description
+  const actions = document.createElement('div');
   actions.className = 'actionsContainer';
 
   const editBtn = document.createElement('button');
@@ -50,11 +49,9 @@ function createTodoElement(todo, index) {
   return todoDiv;
 }
 
-// step 2 - write a function that allows us to add a new todo
-
 function addTodo() {
   let current_todo = todoInput.value;
-  if (!current_todo) { return } //this is a guard clause. It makes it so if there´s no to do input the code will jump out of the function and not get any further
+  if (!current_todo) return;
 
   const index = todo_list.length;
   const newTodo = {
@@ -63,39 +60,32 @@ function addTodo() {
     image_url: ''
   };
 
-  todo_list.push(newTodo); //if we do have an input, it´ll be pushed to the list
+  todo_list.push(newTodo);
   const newItem = createTodoElement(newTodo, index);
-  mainContainer.appendChild(newItem); // we append the new todo DOM node directly - thus making this function O(1) !!!
-  todoInput.value = ''; //this cleans the input bar after an input has been added to the list
+  mainContainer.appendChild(newItem);
+  todoInput.value = '';
   saveData();
   fetchAIGeneratedContent(index);
 }
 
-addBtn.addEventListener('click', addTodo); //then we assign this function to a button
-
-// step 3 - write a function that allows us to delete a todo
+addBtn.addEventListener('click', addTodo);
 
 function deleteTodo(index) {
-  todo_list.splice(index, 1); // removes the item from the data list
+  todo_list.splice(index, 1);
   saveData();
-  renderAll(); // now we re-render all to reassign the indexes
+  renderAll();
 }
-
-// step 4 - write a function that allows us to edit a todo
 
 function editTodo(index) {
-  let current_todo = todo_list[index]; //1: this gets the current todo we want to edit and brings it to the input bar where we can edit it
+  let current_todo = todo_list[index];
   todoInput.value = current_todo.text;
-  deleteTodo(index); //2 - we conjure the delete function to delete the current index running through the edit function. Leaving only the edited input behind
+  deleteTodo(index);
 }
-
-// step 5 - persist all information
 
 function saveData() {
-  localStorage.setItem('todo-list', JSON.stringify({ todo_list })); //this utilizes the browsers local database to save the info and we use the object literal syntax so that we don´t have to write the key and the value
+  localStorage.setItem('todo-list', JSON.stringify({ todo_list }));
 }
 
-// repaint entire list — used when reloading or after deletions
 function renderAll() {
   mainContainer.innerHTML = '';
   todo_list.forEach((todo, i) => {
@@ -103,51 +93,24 @@ function renderAll() {
   });
 }
 
-renderAll(); // Initial UI paint from localStorage
+renderAll();
 
-//Step: 6 Now let´s fetch an AI-generated description and image
-
-async function fetchAIGeneratedContent(index) {  
-  const todo = todo_list[index]; //we´re going to get the current todo object and with the try function we´re going to get the A.I´s response 
-  const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
- // Replace with your API key
+// AI image and description fetch
+async function fetchAIGeneratedContent(index) {
+  const todo = todo_list[index];
 
   try {
-    // this fetches the description
-    const descRes = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch('/api/generate', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${OPENAI_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: 'gpt-4',
-        messages: [
-          { role: 'user', content: `Write a casual two sentences (no more than 10 words long) description of the item but do it like you actually hate me and doubt I will do anything in the list: "${todo.text}"` }
-        ],
-        max_tokens: 60
-      })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ todoText: todo.text })
     });
-    const descData = await descRes.json();
-    todo.description = descData.choices[0].message.content.trim();
 
-    //Same thing wIth the image
-    const imgRes = await fetch('https://api.openai.com/v1/images/generations', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${OPENAI_API_KEY}`
-      },
-      body: JSON.stringify({ //we then translate the JS object into a JSON string so the A.P.I can read it properly and return with a response for us
-        prompt: todo.text,
-        n: 1,
-        size: '256x256'
-      })
-    });
-    const imgData = await imgRes.json();
-    todo.image_url = imgData.data[0].url;
+    const data = await response.json();
+    todo.description = data.description;
+    todo.image_url = data.imageUrl;
 
-    saveData(); //Then we save data and renderall again to persist the image and the description
+    saveData();
     renderAll();
   } catch (err) {
     console.error('AI generation failed:', err);
