@@ -2,10 +2,10 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI Todo</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <style>
     :root {
       --bg: #0a0a0a;
@@ -35,6 +35,7 @@
       animation: fadeIn 1.5s ease-in;
     }
 
+    /* Constant glare animation */
     .hero::before {
       content: "";
       position: absolute;
@@ -44,19 +45,13 @@
       height: 40%;
       background: linear-gradient(130deg, transparent 40%, rgba(255, 255, 255, 0.1) 50%, transparent 60%);
       pointer-events: none;
-      animation: glare 2s ease-out;
-      animation-delay: 0s;
-    }
-
-    .glare-run::before {
-      animation: glare 2s ease-out;
+      animation: glare 5s linear infinite;
     }
 
     @keyframes glare {
       0% {
         left: -75%;
       }
-
       100% {
         left: 100%;
       }
@@ -144,7 +139,6 @@
         opacity: 0;
         transform: translateY(20px);
       }
-
       to {
         opacity: 1;
         transform: translateY(0);
@@ -158,7 +152,7 @@
     <h1>AI TODO LIST</h1>
     <p class="subtitle">Tasks you won't do, now with sarcasm and pictures.</p>
     <div class="input-area">
-      <input type="text" id="todoInput" placeholder="Add something you'll ignore...">
+      <input type="text" id="todoInput" placeholder="Add something you'll ignore..." />
       <button id="addBtn">Do It (Not)</button>
     </div>
   </div>
@@ -183,6 +177,8 @@
       renderTodos();
       input.value = '';
 
+      scrollToTodos();
+
       try {
         const res = await fetch('/api/generate', {
           method: 'POST',
@@ -194,9 +190,11 @@
         todoList[index].description = data.description;
         todoList[index].image_url = data.imageUrl;
         renderTodos();
+        scrollToTodos();
       } catch (e) {
         todoList[index].description = 'AI failed. Probably your fault.';
         renderTodos();
+        scrollToTodos();
       }
     });
 
@@ -216,13 +214,9 @@
       });
     }
 
-    // Restart glare animation every 5 seconds
-    setInterval(() => {
-      const hero = document.querySelector('.hero');
-      hero.classList.remove('glare-run');
-      void hero.offsetWidth; // force reflow
-      hero.classList.add('glare-run');
-    }, 5000);
+    function scrollToTodos() {
+      container.scrollIntoView({ behavior: 'smooth' });
+    }
   </script>
 </body>
 
