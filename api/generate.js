@@ -1,11 +1,9 @@
 // api/generate.js (Vercel Serverless Function)
+const OpenAI = require("openai");
 
-const { Configuration, OpenAIApi } = require("openai");
-
-const configuration = new Configuration({
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-const openai = new OpenAIApi(configuration);
 
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
@@ -19,28 +17,28 @@ module.exports = async (req, res) => {
   }
 
   try {
-    // Generate sarcastic description via GPT-4
-    const completion = await openai.createChatCompletion({
+    // Generate sarcastic description
+    const completion = await openai.chat.completions.create({
       model: "gpt-4",
       messages: [
         {
           role: "user",
-          content: `Write a casual two-sentence (10 words max) description of this item but do it like you hate me and doubt I will ever do it: \"${todoText}\"`,
+          content: `Write a casual two-sentence (10 words max) description of this item but do it like you hate me and doubt I will ever do it: "${todoText}"`,
         },
       ],
       max_tokens: 60,
     });
 
-    const description = completion.data.choices[0].message.content.trim();
+    const description = completion.choices[0].message.content.trim();
 
-    // Generate image from DALL-E
-    const imageRes = await openai.createImage({
+    // Generate image
+    const imageRes = await openai.images.generate({
       prompt: todoText,
       n: 1,
       size: "256x256",
     });
 
-    const imageUrl = imageRes.data.data[0].url;
+    const imageUrl = imageRes.data[0].url;
 
     return res.status(200).json({ description, imageUrl });
   } catch (error) {
