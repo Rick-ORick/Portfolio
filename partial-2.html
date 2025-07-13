@@ -22,6 +22,8 @@
     }
 
     .hero {
+      position: relative;
+      overflow: hidden;
       height: 100vh;
       display: flex;
       align-items: center;
@@ -31,6 +33,33 @@
       padding: 40px;
       background: radial-gradient(circle at center, #1a1a1a, #000);
       animation: fadeIn 1.5s ease-in;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -75%;
+      width: 150%;
+      height: 40%;
+      background: linear-gradient(130deg, transparent 40%, rgba(255, 255, 255, 0.1) 50%, transparent 60%);
+      pointer-events: none;
+      animation: glare 2s ease-out;
+      animation-delay: 0s;
+    }
+
+    .glare-run::before {
+      animation: glare 2s ease-out;
+    }
+
+    @keyframes glare {
+      0% {
+        left: -75%;
+      }
+
+      100% {
+        left: 100%;
+      }
     }
 
     h1 {
@@ -115,6 +144,7 @@
         opacity: 0;
         transform: translateY(20px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -185,6 +215,14 @@
         container.appendChild(el);
       });
     }
+
+    // Restart glare animation every 5 seconds
+    setInterval(() => {
+      const hero = document.querySelector('.hero');
+      hero.classList.remove('glare-run');
+      void hero.offsetWidth; // force reflow
+      hero.classList.add('glare-run');
+    }, 5000);
   </script>
 </body>
 
