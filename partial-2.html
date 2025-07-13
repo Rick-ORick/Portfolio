@@ -35,7 +35,24 @@
       animation: fadeIn 1.5s ease-in;
     }
 
-    /* Constant glare animation */
+    .about-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-size: 0.9em;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .about-btn:hover {
+      background: #ff2d6c;
+    }
+
     .hero::before {
       content: "";
       position: absolute;
@@ -52,6 +69,7 @@
       0% {
         left: -75%;
       }
+
       100% {
         left: 100%;
       }
@@ -134,11 +152,31 @@
       margin-top: 12px;
     }
 
+    footer {
+      background: #111;
+      padding: 60px 20px;
+      text-align: center;
+      color: #ccc;
+    }
+
+    footer h1 {
+      font-size: 2em;
+      margin-bottom: 12px;
+    }
+
+    footer p {
+      max-width: 600px;
+      margin: 0 auto;
+      font-size: 1em;
+      line-height: 1.5;
+    }
+
     @keyframes fadeIn {
       from {
         opacity: 0;
         transform: translateY(20px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -149,6 +187,7 @@
 
 <body>
   <div class="hero">
+    <button class="about-btn" onclick="scrollToAbout()">About</button>
     <h1>AI TODO LIST</h1>
     <p class="subtitle">Tasks you won't do, now with sarcasm and pictures.</p>
     <div class="input-area">
@@ -158,6 +197,11 @@
   </div>
 
   <div class="todo-list" id="todoContainer"></div>
+
+  <footer id="aboutSection">
+    <h1>The Todo List</h1>
+    <p>This is an AI powered Todo List web application that is guaranteed to make you remember to do things. One abhorrent AI-generated image at a time.</p>
+  </footer>
 
   <script>
     const input = document.getElementById('todoInput');
@@ -216,6 +260,10 @@
 
     function scrollToTodos() {
       container.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function scrollToAbout() {
+      document.getElementById('aboutSection').scrollIntoView({ behavior: 'smooth' });
     }
   </script>
 </body>
