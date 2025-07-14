@@ -7,7 +7,7 @@ export default defineConfig({
   root: '.', // Optional, if your files are in root
   build: {
     rollupOptions: {
-      input: '/bookverse.html'
+      input: '/BookVerse.html'
     }
   }
 })
