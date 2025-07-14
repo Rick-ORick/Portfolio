@@ -2,18 +2,22 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/chat.js",
+      "src": "bookverse/api/chat.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "bookverse/index.html",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/api/chat",
-      "dest": "/api/chat.js"
+      "src": "/bookverse/api/chat",
+      "dest": "/bookverse/api/chat.js"
     },
     {
-      "src": "/(.*)",
-      "dest": "/BookVerse.html"
+      "src": "/bookverse/(.*)",
+      "dest": "/bookverse/$1"
     }
   ]
 }
