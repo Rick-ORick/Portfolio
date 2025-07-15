@@ -10,7 +10,11 @@
       "use": "@vercel/node"
     },
     {
-      "src": "bookverse/BookVerse.html",
+      "src": "partial-2.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "BookVerse.html",
       "use": "@vercel/static"
     }
   ],
@@ -24,8 +28,16 @@
       "dest": "api/generate_todo.js"
     },
     {
-      "src": "/(.*)",
-      "dest": "bookverse/$1"
+      "src": "/todo",
+      "dest": "/partial-2.html"
+    },
+    {
+      "src": "/bookverse",
+      "dest": "/BookVerse.html"
+    },
+    {
+      "src": "/",
+      "dest": "/BookVerse.html"
     }
   ]
 }
