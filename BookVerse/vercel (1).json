@@ -2,38 +2,30 @@
   "version": 2,
   "builds": [
     {
-      "src": "bookverse/api/chat.js",
+      "src": "bookverse/api/generate.js",
       "use": "@vercel/node"
     },
     {
-      "src": "api/generate_todo.js",
+      "src": "bookverse/api/generate_todo.js",
       "use": "@vercel/node"
     },
     {
-      "src": "BookVerse.html",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "partial-2.html",
+      "src": "bookverse/BookVerse.html",
       "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/bookverse/api/chat",
-      "dest": "/bookverse/api/chat.js"
+      "src": "/api/generate",
+      "dest": "bookverse/api/generate.js"
     },
     {
       "src": "/api/generate_todo",
-      "dest": "/api/generate_todo.js"
-    },
-    {
-      "src": "/bookverse/(.*)",
-      "dest": "/bookverse/$1"
+      "dest": "bookverse/api/generate_todo.js"
     },
     {
       "src": "/(.*)",
-      "dest": "/partial-2.html"
+      "dest": "bookverse/$1"
     }
   ]
 }
