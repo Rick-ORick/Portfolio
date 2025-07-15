@@ -10,8 +10,8 @@
       "use": "@vercel/node"
     },
     {
-      "src": "bookverse/BookVerse.html",
-      "use": "@vercel/static"
+      "src": "bookverse/package.json",
+      "use": "@vercel/static-build"
     }
   ],
   "routes": [
@@ -25,8 +25,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "bookverse/$1"
+      "dest": "bookverse/dist/$1"
     }
   ]
 }
-
