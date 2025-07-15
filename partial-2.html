@@ -56,6 +56,7 @@
     .a {
       text-decoration: none
     }
+
     .hero::before {
       content: "";
       position: absolute;
@@ -155,6 +156,21 @@
       margin-top: 12px;
     }
 
+    .todo button {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-right: 8px;
+      transition: background 0.3s;
+    }
+
+    .todo button:hover {
+      background: #ff2d6c;
+    }
+
     footer {
       background: #111;
       padding: 60px 20px;
@@ -224,7 +240,6 @@
 
       renderTodos();
       input.value = '';
-
       scrollToTodos();
 
       try {
@@ -248,7 +263,7 @@
 
     function renderTodos() {
       container.innerHTML = '';
-      todoList.forEach(todo => {
+      todoList.forEach((todo, i) => {
         const el = document.createElement('div');
         el.className = 'todo';
 
@@ -256,9 +271,32 @@
           <h3>${todo.text}</h3>
           <p>${todo.description}</p>
           ${todo.image_url ? `<img src="${todo.image_url}" alt="${todo.text}">` : ''}
+          <div style="margin-top: 10px;">
+            <button class="edit-btn" data-index="${i}">Edit</button>
+            <button class="delete-btn" data-index="${i}">Delete</button>
+          </div>
         `;
 
         container.appendChild(el);
+      });
+
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const index = e.target.dataset.index;
+          todoList.splice(index, 1);
+          renderTodos();
+        });
+      });
+
+      document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const index = e.target.dataset.index;
+          const newText = prompt("Edit your task:", todoList[index].text);
+          if (newText !== null && newText.trim() !== '') {
+            todoList[index].text = newText.trim();
+            renderTodos();
+          }
+        });
       });
     }
 
