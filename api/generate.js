@@ -1,48 +1,29 @@
-// api/generate.js (Vercel Serverless Function)
-const OpenAI = require("openai");
+// api/chat.js
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-module.exports = async (req, res) => {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Only POST allowed" });
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).end('Method Not Allowed')
   }
 
-  const { todoText } = req.body;
-
-  if (!todoText || typeof todoText !== "string") {
-    return res.status(400).json({ error: "Invalid or missing todoText" });
-  }
+  const { messages } = req.body
 
   try {
-    // Generate sarcastic description
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4",
-      messages: [
-        {
-          role: "user",
-          content: `Write a casual two-sentence (10 words max) description of this item but do it like you hate me and doubt I will ever do it: "${todoText}"`,
-        },
-      ],
-      max_tokens: 60,
-    });
+    const openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-3.5-turbo',
+        messages
+      })
+    })
 
-    const description = completion.choices[0].message.content.trim();
-
-    // Generate image
-    const imageRes = await openai.images.generate({
-      prompt: todoText,
-      n: 1,
-      size: "256x256",
-    });
-
-    const imageUrl = imageRes.data[0].url;
-
-    return res.status(200).json({ description, imageUrl });
+    const data = await openaiRes.json()
+    res.status(200).json({ reply: data.choices?.[0]?.message?.content || 'No reply' })
   } catch (error) {
-    console.error("OpenAI Error:", error.response?.data || error.message);
-    return res.status(500).json({ error: "OpenAI request failed" });
+    console.error('OpenAI Error:', error)
+    res.status(500).json({ error: 'Error communicating with OpenAI' })
   }
-};
+}
