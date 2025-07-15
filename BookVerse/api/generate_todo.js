@@ -1,4 +1,3 @@
-// This is your serverless function, NOT DOM code!
 import { Configuration, OpenAIApi } from "openai";
 
 const configuration = new Configuration({
