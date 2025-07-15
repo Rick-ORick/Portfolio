@@ -6,7 +6,7 @@
       "use": "@vercel/node"
     },
     {
-      "src": "bookverse/index.html",
+      "src": "BookVerse.html",
       "use": "@vercel/static"
     }
   ],
