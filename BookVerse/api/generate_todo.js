@@ -6,7 +6,9 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).end('Method Not Allowed');
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method Not Allowed' });
+  }
 
   const { todoText } = req.body;
 
@@ -16,24 +18,31 @@ export default async function handler(req, res) {
       messages: [
         {
           role: 'user',
-          content: `Write a casual two sentences (no more than 10 words long) description of the item but do it like you actually hate me and doubt I will do anything in the list: "${todoText}"`,
+          content: `Write a casual two-sentence (under 10 words) sarcastic description of this task: "${todoText}". Make it sound like you doubt I'll ever do it.`,
         },
       ],
       max_tokens: 60,
     });
 
-    const imgRes = await openai.createImage({
-      prompt: todoText,
-      n: 1,
-      size: "256x256",
-    });
+    const description = descRes?.data?.choices?.[0]?.message?.content?.trim() || 'No description generated.';
 
-    res.status(200).json({
-      description: descRes.data.choices[0].message.content.trim(),
-      imageUrl: imgRes.data.data[0].url,
-    });
+    let imageUrl = '';
+
+    try {
+      const imgRes = await openai.createImage({
+        prompt: todoText,
+        n: 1,
+        size: "256x256",
+      });
+
+      imageUrl = imgRes?.data?.data?.[0]?.url || '';
+    } catch (imgErr) {
+      console.error('Image generation failed:', imgErr?.response?.data || imgErr.message || imgErr);
+    }
+
+    res.status(200).json({ description, imageUrl });
   } catch (error) {
-    console.error('OpenAI API error:', error);
+    console.error('OpenAI API error:', error?.response?.data || error.message || error);
     res.status(500).json({ error: 'AI generation failed' });
   }
 }
