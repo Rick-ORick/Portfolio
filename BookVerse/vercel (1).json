@@ -2,11 +2,11 @@
   "version": 2,
   "builds": [
     {
-      "src": "bookverse/api/generate.js",
+      "src": "api/generate.js",
       "use": "@vercel/node"
     },
     {
-      "src": "bookverse/api/generate_todo.js",
+      "src": "api/generate_todo.js",
       "use": "@vercel/node"
     },
     {
@@ -17,11 +17,11 @@
   "routes": [
     {
       "src": "/api/generate",
-      "dest": "bookverse/api/generate.js"
+      "dest": "api/generate.js"
     },
     {
       "src": "/api/generate_todo",
-      "dest": "bookverse/api/generate_todo.js"
+      "dest": "api/generate_todo.js"
     },
     {
       "src": "/(.*)",
@@ -29,3 +29,4 @@
     }
   ]
 }
+
