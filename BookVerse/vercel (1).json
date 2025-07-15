@@ -6,7 +6,15 @@
       "use": "@vercel/node"
     },
     {
+      "src": "api/generate_todo.js",
+      "use": "@vercel/node"
+    },
+    {
       "src": "BookVerse.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "partial-2.html",
       "use": "@vercel/static"
     }
   ],
@@ -16,8 +24,16 @@
       "dest": "/bookverse/api/chat.js"
     },
     {
+      "src": "/api/generate_todo",
+      "dest": "/api/generate_todo.js"
+    },
+    {
       "src": "/bookverse/(.*)",
       "dest": "/bookverse/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/partial-2.html"
     }
   ]
 }
