@@ -1,2 +1,1 @@
 .env
-#this is going to ignore anny files .env inside our code and not upload them to github meaning we can store special api keys that authenticate you to APIs making the key protected
