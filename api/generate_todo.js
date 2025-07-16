@@ -17,7 +17,7 @@ module.exports = async function handler(req, res) {
       messages: [
         {
           role: "user",
-          content: `Write a sarcastic 2-sentence description (10 words max each) of the task: "${todoText}". Act like you don't believe I'll ever do it.`,
+          content: `Write a sarcastic 2-sentence description (10 words max each) of the task: "${todoText}". Act like you don't believe I'll ever do it. If the list item is updated, update the image as well.`,
         },
       ],
       max_tokens: 60,
