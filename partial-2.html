@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Todo</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --accent: #ff004f;
+      --text: #ffffff;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Helvetica Neue', sans-serif;
+      overflow-x: hidden;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      padding: 40px;
+      background: radial-gradient(circle at center, #1a1a1a, #000);
+      animation: fadeIn 1.5s ease-in;
+    }
+
+    .about-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-size: 0.9em;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .about-btn:hover {
+      background: #ff2d6c;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -75%;
+      width: 150%;
+      height: 40%;
+      background: linear-gradient(130deg, transparent 40%, rgba(255, 255, 255, 0.1) 50%, transparent 60%);
+      pointer-events: none;
+      animation: glare 5s linear infinite;
+    }
+
+    @keyframes glare {
+      0% { left: -75%; }
+      100% { left: 100%; }
+    }
+
+    h1 {
+      font-size: 3em;
+      letter-spacing: -1px;
+      margin-bottom: 0.5em;
+    }
+
+    p.subtitle {
+      font-size: 1.2em;
+      color: #aaa;
+      max-width: 600px;
+    }
+
+    .input-area {
+      margin-top: 40px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .input-area input {
+      padding: 14px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      width: 300px;
+      background: #111;
+      color: var(--text);
+    }
+
+    .input-area button {
+      padding: 14px 24px;
+      font-size: 1em;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .input-area button:hover {
+      transform: scale(1.05);
+    }
+
+    .todo-list {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      gap: 20px;
+    }
+
+    .todo {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 600px;
+      width: 100%;
+      transition: transform 0.3s ease, box-shadow 0.3s;
+    }
+
+    .todo:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 0 20px rgba(255, 0, 79, 0.2);
+    }
+
+    .todo h3 {
+      margin: 0 0 10px;
+    }
+
+    .todo img {
+      max-width: 120px;
+      border-radius: 8px;
+      margin-top: 12px;
+    }
+
+    .todo button {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-right: 8px;
+      transition: background 0.3s;
+    }
+
+    .todo button:hover {
+      background: #ff2d6c;
+    }
+
+    footer {
+      background: #111;
+      padding: 60px 20px;
+      text-align: center;
+      color: #ccc;
+    }
+
+    footer h1 {
+      font-size: 2em;
+      margin-bottom: 12px;
+    }
+
+    footer p {
+      max-width: 600px;
+      margin: 0 auto;
+      font-size: 1em;
+      line-height: 1.5;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="hero">
+    <button class="about-btn" onclick="scrollToAbout()">About</button>
+    <h1>AI TODO LIST</h1>
+    <p class="subtitle">Tasks you won't do, now with sarcasm and pictures.</p>
+    <div class="input-area">
+      <input type="text" id="todoInput" placeholder="Add something you'll ignore..." />
+      <button id="addBtn">Do It (Not)</button>
+    </div>
+  </div>
+
+  <div class="todo-list" id="todoContainer"></div>
+
+  <footer id="aboutSection">
+    <h1>The Todo List</h1>
+    <p>This is an AI powered Todo List web application that is guaranteed to make you remember to do things. One abhorrent AI-generated image at a time.</p>
+    <p>You can check out more of my projects in my <a href="https://portfolio-git-main-ricks-projects-08c86335.vercel.app/" target="_blank">portfolio</a>!</p>
+  </footer>
+
+  <script>
+    const input = document.getElementById('todoInput');
+    const btn = document.getElementById('addBtn');
+    const container = document.getElementById('todoContainer');
+
+    let todoList = [];
+
+    btn.addEventListener('click', async () => {
+      const text = input.value.trim();
+      if (!text) return;
+
+      const index = todoList.length;
+      const todo = { text, description: 'Thinking...', image_url: '' };
+      todoList.push(todo);
+
+      renderTodos();
+      input.value = '';
+      scrollToTodos();
+
+      try {
+        const res = await fetch('/api/generate_todo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ todoText: text })
+        });
+
+        const data = await res.json();
+        todoList[index].description = data.description;
+        todoList[index].image_url = data.imageUrl;
+        renderTodos();
+        scrollToTodos();
+      } catch (e) {
+        todoList[index].description = 'AI failed. Probably your fault.';
+        renderTodos();
+        scrollToTodos();
+      }
+    });
+
+    function renderTodos() {
+      container.innerHTML = '';
+      todoList.forEach((todo, i) => {
+        const el = document.createElement('div');
+        el.className = 'todo';
+
+        el.innerHTML = `
+          <h3>${todo.text}</h3>
+          <p>${todo.description}</p>
+          ${todo.image_url ? `<img src="${todo.image_url}" alt="${todo.text}">` : ''}
+          <div style="margin-top: 10px;">
+            <button class="edit-btn" data-index="${i}">Edit</button>
+            <button class="delete-btn" data-index="${i}">Delete</button>
+          </div>
+        `;
+
+        container.appendChild(el);
+      });
+
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const index = e.target.dataset.index;
+          todoList.splice(index, 1);
+          renderTodos();
+        });
+      });
+
+      document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const index = e.target.dataset.index;
+          const newText = prompt("Edit your task:", todoList[index].text);
+          if (newText !== null && newText.trim() !== '') {
+            todoList[index].text = newText.trim();
+            renderTodos();
+          }
+        });
+      });
+    }
+
+    function scrollToTodos() {
+      container.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function scrollToAbout() {
+      document.getElementById('aboutSection').scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
