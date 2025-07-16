@@ -213,7 +213,13 @@
 
     renderTodos();
 
-    btn.addEventListener('click', async () => {
+    btn.addEventListener('click', addTodo);
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') addTodo();
+    });
+
+    async function addTodo() {
       const text = input.value.trim();
       if (!text) return;
 
@@ -221,7 +227,6 @@
       const todo = { text, description: 'Thinking...', image_url: '' };
       todoList.push(todo);
       saveTodos();
-
       renderTodos();
       input.value = '';
       scrollToTodos();
@@ -245,7 +250,7 @@
         renderTodos();
         scrollToTodos();
       }
-    });
+    }
 
     function renderTodos() {
       container.innerHTML = '';
