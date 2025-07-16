@@ -1,4 +1,4 @@
-// src/context/LibraryContext.jsx
+//LibraryContext
 import React, { createContext, useContext, useState, useEffect } from 'react'
 
 const LibraryContext = createContext()
