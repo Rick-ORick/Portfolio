@@ -1,4 +1,3 @@
-// src/services/bookAPI.js
 import axios from 'axios'
 
 const API_URL = 'https://www.googleapis.com/books/v1/volumes?q='
