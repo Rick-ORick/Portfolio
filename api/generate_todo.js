@@ -1,9 +1,8 @@
-const { Configuration, OpenAIApi } = require("openai");
+const OpenAI = require("openai");
 
-const configuration = new Configuration({
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-const openai = new OpenAIApi(configuration);
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -13,34 +12,29 @@ module.exports = async function handler(req, res) {
   const { todoText } = req.body;
 
   try {
-    const descRes = await openai.createChatCompletion({
-      model: 'gpt-4',
+    const chatResponse = await openai.chat.completions.create({
+      model: "gpt-4",
       messages: [
         {
-          role: 'user',
-          content: `Write a casual two-sentence (under 10 words) sarcastic description of this task: "${todoText}". Be pacive agressive and make it sound like you doubt I'll ever do anything in the list.`,
+          role: "user",
+          content: `Write a sarcastic 2-sentence description (10 words max each) of the task: "${todoText}". Act like you don't believe I'll ever do it.`,
         },
       ],
       max_tokens: 60,
     });
 
-    const description = descRes?.data?.choices?.[0]?.message?.content?.trim() || 'No description generated.';
+    const imageResponse = await openai.images.generate({
+      prompt: todoText,
+      n: 1,
+      size: "256x256",
+    });
 
-    let imageUrl = '';
-    try {
-      const imgRes = await openai.createImage({
-        prompt: todoText,
-        n: 1,
-        size: "256x256",
-      });
-      imageUrl = imgRes?.data?.data?.[0]?.url || '';
-    } catch (imgErr) {
-      console.error('Image generation failed:', imgErr?.response?.data || imgErr.message || imgErr);
-    }
-
-    res.status(200).json({ description, imageUrl });
+    res.status(200).json({
+      description: chatResponse.choices[0].message.content.trim(),
+      imageUrl: imageResponse.data[0].url,
+    });
   } catch (error) {
-    console.error('OpenAI API error:', error?.response?.data || error.message || error);
-    res.status(500).json({ error: 'AI generation failed' });
+    console.error("OpenAI API Error:", error?.response?.data || error.message || error);
+    res.status(500).json({ error: "AI generation failed" });
   }
 };
