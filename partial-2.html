@@ -22,7 +22,6 @@
 
     .hero {
       position: relative;
-      overflow: hidden;
       height: 100vh;
       display: flex;
       align-items: center;
@@ -181,19 +180,11 @@
     }
 
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
-
 <body>
   <div class="hero">
     <button class="about-btn" onclick="scrollToAbout()">About</button>
@@ -218,7 +209,9 @@
     const btn = document.getElementById('addBtn');
     const container = document.getElementById('todoContainer');
 
-    let todoList = [];
+    let todoList = JSON.parse(localStorage.getItem('todos')) || [];
+
+    renderTodos();
 
     btn.addEventListener('click', async () => {
       const text = input.value.trim();
@@ -227,6 +220,7 @@
       const index = todoList.length;
       const todo = { text, description: 'Thinking...', image_url: '' };
       todoList.push(todo);
+      saveTodos();
 
       renderTodos();
       input.value = '';
@@ -242,10 +236,12 @@
         const data = await res.json();
         todoList[index].description = data.description;
         todoList[index].image_url = data.imageUrl;
+        saveTodos();
         renderTodos();
         scrollToTodos();
       } catch (e) {
         todoList[index].description = 'AI failed. Probably your fault.';
+        saveTodos();
         renderTodos();
         scrollToTodos();
       }
@@ -274,6 +270,7 @@
         btn.addEventListener('click', (e) => {
           const index = e.target.dataset.index;
           todoList.splice(index, 1);
+          saveTodos();
           renderTodos();
         });
       });
@@ -284,10 +281,15 @@
           const newText = prompt("Edit your task:", todoList[index].text);
           if (newText !== null && newText.trim() !== '') {
             todoList[index].text = newText.trim();
+            saveTodos();
             renderTodos();
           }
         });
       });
+    }
+
+    function saveTodos() {
+      localStorage.setItem('todos', JSON.stringify(todoList));
     }
 
     function scrollToTodos() {
