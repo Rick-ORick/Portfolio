@@ -4,18 +4,34 @@
 
 @layer base {
   body {
-    @apply bg-neutral-950 text-neutral-100 font-sans tracking-wide;
+    /* Sleek, dark background */
+    @apply bg-neutral-900 text-neutral-100 font-sans tracking-wide min-h-screen; 
   }
 
   h1, h2, h3 {
-    @apply font-bold text-white;
+    /* Bold and slightly brighter titles */
+    @apply font-extrabold text-white; 
   }
 
   a {
-    @apply underline hover:text-blue-400 transition-all duration-200;
+    /* More vibrant link color for interaction */
+    @apply text-fuchsia-400 hover:text-fuchsia-300 transition-all duration-300 underline; 
   }
 
   button {
-    @apply transition-all duration-200;
+    /* Smoother button transitions */
+    @apply transition-all duration-300 ease-in-out transform hover:scale-[1.03]; 
+  }
+
+  /* Custom class for a colorful, playful glow/border effect */
+  .glow-border {
+    @apply relative p-4 rounded-xl border border-neutral-700 bg-neutral-800 shadow-lg;
+  }
+}
+
+/* Added a custom utility class for text glow */
+@layer utilities {
+  .text-glow {
+    text-shadow: 0 0 5px rgba(236, 72, 153, 0.5), 0 0 10px rgba(236, 72, 153, 0.3);
   }
 }
