@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Henrique Oliveira — Case Studies</title>
+	<meta name="theme-color" content="#1b6aff">
+	<link rel="shortcut icon" href="https://github.com/Rick-ORick/CIC/blob/main/computer.png?raw=true">
+
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<!-- Google Fonts -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+	<!-- Font Awesome -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" crossorigin="anonymous"></script>
+
+	<style>
+/* ============= GLOBAL STYLES ============= */
+html {
+	padding: env(safe-area-inset);
+	scroll-behavior: auto!important;
+}
+body {
+	font-family: 'Open Sans', sans-serif;
+	color: #363c42;
+	margin: 0;
+}
+a, .btn, button {
+	cursor: pointer!important;
+	text-decoration: none;
+	transition: all .5s ease;
+}
+a { color: #1b6aff; }
+
+/* ============= NAVIGATION ============= */
+.navbar {
+	padding: .6rem .9rem;
+	font-size: .95rem;
+	letter-spacing: .06rem;
+	background-color: rgba(0, 0, 0, .9);
+	font-weight: 700;
+	text-transform: uppercase;
+}
+.navbar-nav .nav-link {
+	padding-top: .8rem;
+	color: white;
+	text-shadow: 0px 0px 2px rgba(0, 0, 0, 1);
+}
+.navbar-nav .nav-link:hover { color: #679cff; }
+.svg-inline--fa.fa-bars {
+	color: white;
+	font-size: 1.6rem;
+}
+.navbar-toggler { border: none!important; }
+
+/* ============= CASE STUDY SECTION ============= */
+section#case-studies {
+	padding-top: 7rem;
+	padding-bottom: 5rem;
+	background-color: #f8f9fa;
+	text-align: center;
+}
+.heading {
+	text-transform: uppercase;
+	font-weight: 700;
+	font-size: 2.2rem;
+	margin-bottom: 1rem;
+}
+.heading-underline {
+	width: 4rem;
+	height: .25rem;
+	background-color: #1b6aff;
+	margin: 1rem auto 2rem;
+}
+.case-thumbnail {
+	max-width: 600px;
+	width: 90%;
+	border-radius: 8px;
+	box-shadow: 0 0 12px rgba(0,0,0,0.15);
+	cursor: pointer;
+	transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.case-thumbnail:hover {
+	transform: scale(1.02);
+	box-shadow: 0 0 20px rgba(0,0,0,0.25);
+}
+.case-description {
+	max-width: 700px;
+	margin: 1.5rem auto 0;
+}
+.case-description h2 {
+	font-weight: 700;
+	font-size: 1.6rem;
+	margin-bottom: .5rem;
+}
+.case-description p {
+	font-size: 1.1rem;
+	color: #555;
+}
+
+/* ============= MODAL GALLERY ============= */
+.modal-overlay {
+	display: none;
+	position: fixed;
+	z-index: 9999;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(15, 15, 15, 0.9);
+	justify-content: center;
+	align-items: center;
+	transition: opacity 0.3s ease;
+}
+.modal-content {
+	position: relative;
+	max-width: 90%;
+	max-height: 90%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.modal-content img {
+	max-width: 100%;
+	max-height: 85vh;
+	border-radius: 10px;
+	box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
+}
+.close-btn {
+	position: absolute;
+	top: 30px;
+	left: 40px;
+	font-size: 2rem;
+	color: white;
+	cursor: pointer;
+	z-index: 10000;
+	transition: opacity 0.2s ease;
+}
+.close-btn:hover { opacity: 0.6; }
+.arrow {
+	position: absolute;
+	top: 50%;
+	font-size: 3rem;
+	color: white;
+	cursor: pointer;
+	user-select: none;
+	padding: 10px;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.15);
+	transform: translateY(-50%);
+	transition: background 0.2s ease, transform 0.2s ease;
+}
+.arrow:hover {
+	background: rgba(255, 255, 255, 0.35);
+	transform: translateY(-50%) scale(1.1);
+}
+.arrow.left { left: 25px; }
+.arrow.right { right: 25px; }
+.modal-overlay.show {
+	display: flex;
+	animation: fadeIn 0.25s ease;
+}
+@keyframes fadeIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+	</style>
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar navbar-expand-xl fixed-top">
+	<div class="container-xxl">
+		<a href="#" class="navbar-brand">
+			<h3 class="text-light pt-2">Henrique Oliveira</h3>
+		</a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
+			<span class="custom-toggler-icon"><i class="fa-solid fa-bars"></i></span>
+		</button>
+
+		<div class="collapse navbar-collapse" id="navbarResponsive">
+			<ul class="navbar-nav ms-auto">
+				<li class="nav-item">
+					<a href="https://portfolio-git-main-ricks-projects-08c86335.vercel.app/" class="nav-link">Home</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</nav>
+
+<!-- ===== CASE STUDY SECTION ===== -->
+<section id="case-studies">
+	<h1 class="heading">Case Studies</h1>
+	<div class="heading-underline"></div>
+
+	<img src="public/uphomepage.png" alt="Uptown Productions Website" class="case-thumbnail" id="uptownTrigger">
+
+	<div class="case-description">
+		<h2>Uptown Productions Website</h2>
+		<p>A modern, responsive web platform designed for a creative film and media production company. 
+		   Built with React and TailwindCSS, integrating dynamic visuals, smooth animations, and a minimal UX-first layout.</p>
+	</div>
+</section>
+
+<!-- ===== MODAL ===== -->
+<div id="uptownModal" class="modal-overlay">
+	<span class="close-btn">&times;</span>
+	<div class="modal-content">
+		<span class="arrow left">&#x276E;</span>
+		<img id="modalImage" src="public/upcase.png" alt="Uptown Case Study">
+		<span class="arrow right">&#x276F;</span>
+	</div>
+</div>
+
+<!-- ===== SCRIPTS ===== -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script>
+const images = [
+  "public/upcase.png",
+  "public/upcase2.png",
+  "public/upcase3.png",
+  "public/upcase4.png",
+  "public/upcase5.png"
+];
+const modal = document.getElementById("uptownModal");
+const modalImg = document.getElementById("modalImage");
+const trigger = document.getElementById("uptownTrigger");
+const closeBtn = document.querySelector(".close-btn");
+const leftArrow = document.querySelector(".arrow.left");
+const rightArrow = document.querySelector(".arrow.right");
+let currentIndex = 0;
+
+// Open modal
+trigger.onclick = () => {
+  modal.classList.add("show");
+  modalImg.src = images[currentIndex];
+};
+
+// Close modal
+closeBtn.onclick = () => modal.classList.remove("show");
+modal.onclick = e => { if (e.target === modal) modal.classList.remove("show"); };
+
+// Navigate images
+leftArrow.onclick = e => {
+  e.stopPropagation();
+  currentIndex = (currentIndex - 1 + images.length) % images.length;
+  modalImg.src = images[currentIndex];
+};
+rightArrow.onclick = e => {
+  e.stopPropagation();
+  currentIndex = (currentIndex + 1) % images.length;
+  modalImg.src = images[currentIndex];
+};
+</script>
+
+</body>
+</html>
