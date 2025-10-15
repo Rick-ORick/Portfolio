@@ -8361,6 +8361,89 @@ $bootstrap-icons-map: (
 .bi-tencent-qq::before { content: map-get($bootstrap-icons-map, "tencent-qq"); }
 .bi-wikipedia::before { content: map-get($bootstrap-icons-map, "wikipedia"); }
 <!--fonts-->
+
+		/* Modal Overlay */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(15, 15, 15, 0.9);
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.3s ease;
+}
+
+/* Modal Content */
+.modal-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content img {
+  max-width: 100%;
+  max-height: 85vh;
+  border-radius: 10px;
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
+}
+
+/* Close Button */
+.close-btn {
+  position: absolute;
+  top: 30px;
+  left: 40px;
+  font-size: 2rem;
+  color: white;
+  cursor: pointer;
+  z-index: 10000;
+  transition: opacity 0.2s ease;
+}
+.close-btn:hover {
+  opacity: 0.6;
+}
+
+/* Arrows */
+.arrow {
+  position: absolute;
+  top: 50%;
+  font-size: 3rem;
+  color: white;
+  cursor: pointer;
+  user-select: none;
+  padding: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-50%);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.arrow:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: translateY(-50%) scale(1.1);
+}
+.arrow.left {
+  left: 25px;
+}
+.arrow.right {
+  right: 25px;
+}
+
+/* Smooth fade-in for modal */
+.modal-overlay.show {
+  display: flex;
+  animation: fadeIn 0.25s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 		/*===== WOFF2 & WOFF RENDER ACCROSS MODERN BROWSERS. FOR MORE COMPATIBILITY SUPPORT VISIT https://gwfh.mranftl.com/fonts AND SEE THE OTHER FONT FORMATS AVAILABLE FOR OLDER BROWSERS. =====*/
 
 /*===== ROBOTO =====*/
@@ -9178,6 +9261,44 @@ $bootstrap-icons-map: (
 		</div>
 
 	</section>
+
+	<section id="case-studies" class="offset">
+  <div class="container-xxl text-center py-5">
+
+    <h2 class="heading">Case Studies</h2>
+    <div class="heading-underline" style="width: 11rem!important;"></div>
+
+    <div class="row pt-4">
+      <!-- Uptown Productions Project -->
+      <div class="col-md-6 col-lg-3 pb-4">
+        <img src="public/uphomepage.png" alt="Uptown Productions Website" class="img-fluid my-3 project-img" id="uptownTrigger">
+        <div>
+          <p>
+            <a href="https://uptown-pi.vercel.app/" target="_blank" class="text-dark text-decoration-none fw-bold">
+              Uptown Productions Website
+            </a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Blanked out placeholders -->
+      <div class="col-md-6 col-lg-3 pb-4"></div>
+      <div class="col-md-6 col-lg-3 pb-4"></div>
+      <div class="col-md-6 col-lg-3 pb-4"></div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="uptownModal" class="modal-overlay">
+    <span class="close-btn">&times;</span>
+    <div class="modal-content">
+      <span class="arrow left">&#x276E;</span>
+      <img id="modalImage" src="public/upcase.png" alt="Uptown Case Study">
+      <span class="arrow right">&#x276F;</span>
+    </div>
+  </div>
+</section>
+
 	
 	<section id="experience" class="offset">
 
@@ -9340,6 +9461,48 @@ I thrive in fast-paced, collaborative environments and manage multiple projects 
 	</script>
 	
 	<script src="plugins.js"></script>
+
+				<script>
+  const images = [
+    "public/upcase.png",
+    "public/upcase2.png",
+    "public/upcase3.png",
+    "public/upcase4.png",
+    "public/upcase5.png"
+  ];
+
+  const modal = document.getElementById("uptownModal");
+  const modalImg = document.getElementById("modalImage");
+  const trigger = document.getElementById("uptownTrigger");
+  const closeBtn = document.querySelector(".close-btn");
+  const leftArrow = document.querySelector(".arrow.left");
+  const rightArrow = document.querySelector(".arrow.right");
+  let currentIndex = 0;
+
+  // Open modal
+  trigger.onclick = () => {
+    modal.classList.add("show");
+    modalImg.src = images[currentIndex];
+  };
+
+  // Close modal
+  closeBtn.onclick = () => modal.classList.remove("show");
+  modal.onclick = (e) => { if (e.target === modal) modal.classList.remove("show"); };
+
+  // Navigate images
+  leftArrow.onclick = (e) => {
+    e.stopPropagation();
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    modalImg.src = images[currentIndex];
+  };
+
+  rightArrow.onclick = (e) => {
+    e.stopPropagation();
+    currentIndex = (currentIndex + 1) % images.length;
+    modalImg.src = images[currentIndex];
+  };
+</script>
+
 
 </body>
 </html>
